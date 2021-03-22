@@ -1,5 +1,6 @@
 import 'package:hygieia/screens/authenticate/sign_in.dart';
 import 'package:flutter/material.dart';
+import 'package:hygieia/screens/authenticate/sign_up.dart';
 
 class Authenticate extends StatefulWidget {
   @override
@@ -7,12 +8,19 @@ class Authenticate extends StatefulWidget {
 }
 
 class _AuthenticateState extends State<Authenticate> {
+
+  bool showSignIn = false;
+  void toggleView(){
+    setState(() => showSignIn = !showSignIn);
+  }
+
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Container(
-        child: SignIn(),
-      ),
-    );
+    if(showSignIn){
+      return SignIn(toggleView: toggleView);
+    }
+    else{
+      return Register(toggleView: toggleView);
+    }
   }
 }

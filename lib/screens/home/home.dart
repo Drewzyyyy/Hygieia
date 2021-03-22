@@ -4,6 +4,8 @@ import 'package:animated_bottom_navigation_bar/animated_bottom_navigation_bar.da
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:hygieia/services/auth.dart';
+import 'package:syncfusion_flutter_charts/charts.dart';
 
 class Home extends StatefulWidget {
   @override
@@ -12,13 +14,21 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> with SingleTickerProviderStateMixin{
   final autoSizeGroup = AutoSizeGroup();
-
+  final AuthService _auth = AuthService();
   var _bottomNavIndex = 0;
   AnimationController _animationController;
 
   Animation<double> animation;
 
   CurvedAnimation curve;
+
+  final doughnutData = <_ChartData>[
+    _ChartData(xData: "Recyclable",yData: 45, text:"recyclable"),
+    _ChartData(xData: "Non-Recyclable",yData: 15, text:"non-recyclable"),
+    _ChartData(xData: "Hazardous Waste",yData: 10, text:"hazard"),
+    _ChartData(xData: "Biodegradable",yData: 5, text:"bio"),
+    _ChartData(xData: "Organic",yData: 15, text:"organic"),
+  ];
 
   final iconList = <IconData>[
     Icons.home,
@@ -58,71 +68,100 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin{
       child: Scaffold(
         extendBody: true,
         backgroundColor: Colors.white,
-        body: Container(
-          padding: EdgeInsets.fromLTRB(30, 72, 30, 10),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text('Hello, User',
-                style: GoogleFonts.montserrat(
-                  fontSize: 30,
-                  fontWeight: FontWeight.w400,
-               ),
-                textAlign: TextAlign.center,
-              ),
-              SizedBox(height: 15),
-              Card(
-                elevation: 5,
-                shadowColor: Colors.grey[700],
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(20),
+        body: SingleChildScrollView(
+          child: Container(
+            padding: EdgeInsets.fromLTRB(30, 72, 30, 10),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text('Hello, User',
+                  style: GoogleFonts.montserrat(
+                    fontSize: 30,
+                    fontWeight: FontWeight.w400,
+                 ),
+                  textAlign: TextAlign.center,
                 ),
-                child: SizedBox(
-                  width: 700,
-                  height: 250,
-                  child: Column(
-                    children:[
-                      Expanded(child: Text("Charts and stuff")),
-                      Divider(
-                        height: 15,
-                        thickness: 2,
-                        indent: 50,
-                        endIndent: 50,
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children:[
-                          Container(
-                            padding: EdgeInsets.all(1),
-                            child: AutoSizeText(
-                              'You have saved bla bla bla bla BLA BLA BLA',
-                              maxLines: 2,
-                              style: GoogleFonts.montserrat(
-                                fontSize: 11,
-                                fontWeight: FontWeight.w400,
-                                color: HexColor("707070"),
+                SizedBox(height: 5),
+                Card(
+                  elevation: 5,
+                  shadowColor: Colors.grey[700],
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  child: SizedBox(
+                    width: 1000,
+                    height: 300,
+                    child: Column(
+                      children:[
+                        Expanded(
+                            child: SfCircularChart(
+                                legend: Legend(isVisible: true),
+                                series: <DoughnutSeries<_ChartData, String>>[
+                                  DoughnutSeries<_ChartData, String>(
+                                      explode: true,
+                                      explodeIndex: 1,
+                                      dataSource: doughnutData,
+                                      xValueMapper: (_ChartData data, _) => data.xData,
+                                      yValueMapper: (_ChartData data, _) => data.yData,
+                                      dataLabelMapper: (_ChartData data, _) => data.text,
+                                      dataLabelSettings: DataLabelSettings(isVisible: false)),
+                                ]
+                            )
+                        ),
+                        Divider(
+                          height: 25,
+                          thickness: 2,
+                          indent: 50,
+                          endIndent: 50,
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children:[
+                            SizedBox(
+                              height: 75,
+                              width: 180,
+                              child: Container(
+                                padding: EdgeInsets.fromLTRB(25, 7, 7, 7),
+                                child: AutoSizeText(
+                                  'You have reduced 16 years if composting by utilizing, 45% recyclable items weekly. \nGood job!',
+                                  maxLines: 5,
+                                  style: GoogleFonts.montserrat(
+                                    fontSize: 9,
+                                    fontWeight: FontWeight.w400,
+                                    color: HexColor("707070"),
+                                  ),
+                                ),
                               ),
                             ),
-                          ),
-                          Expanded(
-                            flex: 2,
-                            child: Container(
-                              padding: EdgeInsets.all(20),
-                              child: Icon(
-                                FontAwesomeIcons.recycle,
-                                color: Colors.green[600],
-                                size: 46,
+                            SizedBox(
+                              height: 75,
+                              width: 100,
+                              child: Container(
+                                child: Icon(
+                                  FontAwesomeIcons.recycle,
+                                  color: Colors.green[600],
+                                  size: 35,
+                                ),
                               ),
                             ),
-                          ),
-                        ]
-                      ),
-                    ]
+                          ]
+                        ),
+                        SizedBox(height:15),
+                      ]
+                    ),
                   ),
                 ),
-              ),
-            ],
+                SizedBox(height:15),
+                TextButton.icon(
+                    onPressed: () async{
+                      await _auth.signOut();
+                    },
+                    icon: Icon(Icons.person),
+                    label: Text("Logout")),
+              ],
+            ),
           ),
         ),
         floatingActionButton: ScaleTransition(
@@ -170,4 +209,11 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin{
       ),
     );
   }
+}
+
+class _ChartData{
+  final String xData;
+  final num yData;
+  final String text;
+  _ChartData({this.xData,this.yData,this.text});
 }

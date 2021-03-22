@@ -3,24 +3,25 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:hygieia/services/auth.dart';
 import 'package:hygieia/shared/loading.dart';
 
-class SignIn extends StatefulWidget {
+class Register extends StatefulWidget {
 
   final Function toggleView;
-  SignIn({this.toggleView});
+  Register({this.toggleView});
 
   @override
-  _SignInState createState() => _SignInState();
+  _RegisterState createState() => _RegisterState();
 }
 
-class _SignInState extends State<SignIn> {
+class _RegisterState extends State<Register> {
 
   // For Logging in
   final AuthService _auth = AuthService();
   final _formkey = GlobalKey<FormState>();
-  bool loading = false;
 
   // Will the password be visible
   bool _passVisible = true;
+  bool _cPassVisible = false;
+  bool loading = false;
 
   // Change the state of password visibility
   void _hidePass(){
@@ -29,14 +30,22 @@ class _SignInState extends State<SignIn> {
     });
   }
 
+  void _hideCPass(){
+    setState(() {
+      _cPassVisible = !_cPassVisible;
+    });
+  }
+
   String email = "";
   String password = "";
+  String userName = "";
+  String confirmPass = "";
   String error = "";
 
   @override
   Widget build(BuildContext context) {
     return loading ? Loading() : Scaffold(
-      backgroundColor: Colors.black,
+      backgroundColor:   Colors.black,
       resizeToAvoidBottomInset: false,
       body: Stack(
         children: [
@@ -83,7 +92,53 @@ class _SignInState extends State<SignIn> {
                       children: [
                         SizedBox(height: 20),
                         TextFormField(
+                          validator: (val) => val.isEmpty ? "Please enter valid username": null,
+                          scrollPadding: EdgeInsets.only(
+                            bottom: MediaQuery.of(context).viewInsets.bottom + 25,
+                          ),
+                          style: TextStyle(
+                            color: Colors.white,
+                          ),
+                          decoration: InputDecoration(
+                              hintText: "Username",
+                              hintStyle: GoogleFonts.montserrat(
+                                color: Colors.white,
+                                fontWeight: FontWeight.w300,
+                                fontSize: 15,
+                              ),
+                              labelStyle: TextStyle(
+                                  decorationColor: Colors.white
+                              ),
+                              enabledBorder: UnderlineInputBorder(
+                                borderSide: BorderSide(
+                                    color: Colors.white,
+                                    style: BorderStyle.solid
+                                ),
+                              ),
+                              focusedBorder: UnderlineInputBorder(
+                                borderSide: BorderSide(
+                                    color: Colors.blue,
+                                    style: BorderStyle.solid
+                                ),
+                              ),
+                              errorBorder: UnderlineInputBorder(
+                                borderSide: BorderSide(
+                                    color: Colors.red,
+                                    style: BorderStyle.solid
+                                ),
+                              ),
+                              suffixIcon: Icon(Icons.account_circle_outlined,color: Colors.white)
+                          ),
+                          onChanged: (val) {
+                            setState(()=> userName = val);
+                          },
+                        ),
+                        SizedBox(height: 20),
+                        TextFormField(
                           validator: (val) => val.isEmpty ? "Please enter valid email": null,
+                          scrollPadding: EdgeInsets.only(
+                            bottom: MediaQuery.of(context).viewInsets.bottom + 25,
+                          ),
                           style: TextStyle(
                             color: Colors.white,
                           ),
@@ -105,7 +160,7 @@ class _SignInState extends State<SignIn> {
                               ),
                               focusedBorder: UnderlineInputBorder(
                                 borderSide: BorderSide(
-                                    color: Colors.white,
+                                    color: Colors.blue,
                                     style: BorderStyle.solid
                                 ),
                               ),
@@ -125,6 +180,9 @@ class _SignInState extends State<SignIn> {
                         TextFormField(
                           obscureText: _passVisible,
                           validator: (val) => val.length < 6 ? "Password must be 6+ characters": null,
+                          scrollPadding: EdgeInsets.only(
+                            bottom: MediaQuery.of(context).viewInsets.bottom + 25,
+                          ),
                           style: TextStyle(
                             color: Colors.white,
                           ),
@@ -146,7 +204,7 @@ class _SignInState extends State<SignIn> {
                             ),
                             focusedBorder: UnderlineInputBorder(
                               borderSide: BorderSide(
-                                  color: Colors.white,
+                                  color: Colors.blue,
                                   style: BorderStyle.solid
                               ),
                             ),
@@ -166,22 +224,70 @@ class _SignInState extends State<SignIn> {
                             setState(()=> password = val);
                           },
                         ),
+                        SizedBox(height: 20),
+                        TextFormField(
+                          obscureText: _cPassVisible,
+                          validator: (val) => val.isEmpty ? "Please enter valid password": null,
+                          scrollPadding: EdgeInsets.only(
+                            bottom: MediaQuery.of(context).viewInsets.bottom + 25,
+                          ),
+                          style: TextStyle(
+                            color: Colors.white,
+                          ),
+                          decoration: InputDecoration(
+                            hintText: "Confirm Password",
+                            hintStyle: GoogleFonts.montserrat(
+                              color: Colors.white,
+                              fontWeight: FontWeight.w300,
+                              fontSize: 15,
+                            ),
+                            labelStyle: TextStyle(
+                                decorationColor: Colors.white
+                            ),
+                            enabledBorder: UnderlineInputBorder(
+                              borderSide: BorderSide(
+                                  color: Colors.white,
+                                  style: BorderStyle.solid
+                              ),
+                            ),
+                            focusedBorder: UnderlineInputBorder(
+                              borderSide: BorderSide(
+                                  color: Colors.blue,
+                                  style: BorderStyle.solid
+                              ),
+                            ),
+                            errorBorder: UnderlineInputBorder(
+                              borderSide: BorderSide(
+                                  color: Colors.red,
+                                  style: BorderStyle.solid
+                              ),
+                            ),
+                            suffixIcon: IconButton(
+                              icon: Icon(Icons.visibility),
+                              color: Colors.white,
+                              onPressed: _hideCPass,
+                            ),
+                          ),
+                          onChanged: (val) {
+                            setState(()=> confirmPass = val);
+                          },
+                        ),
                         SizedBox(height: 25),
                         ElevatedButton(
                           onPressed: () async {
                             if(_formkey.currentState.validate()){
                               setState(() => loading = true);
-                              dynamic result = await _auth.signInWithEmailAndPass(email, password);
+                              dynamic result = await _auth.registerWithEmailAndPass(userName, email, password, confirmPass);
                               if(result==null){
                                 setState(() {
-                                  error = "Invalid email and/or password";
+                                  error = "Please enter a valid email and password";
                                   loading = false;
                                 });
                               }
                             }
                           },
                           child: Text(
-                            "LOGIN",
+                            "SIGN UP",
                             style: GoogleFonts.montserrat(
                               color: Colors.black,
                               fontWeight: FontWeight.bold,
@@ -207,13 +313,23 @@ class _SignInState extends State<SignIn> {
                       ],
                     )
                 ),
+                SizedBox(height: 5),
+                Text(
+                  "Please check your email to confirm your account.",
+                  textAlign: TextAlign.center,
+                  style: GoogleFonts.montserrat(
+                    color: Colors.white,
+                    fontWeight: FontWeight.w300,
+                    fontSize: 10,
+                  ),
+                ),
                 SizedBox(height: 200),
                 Align(
                   alignment: Alignment.bottomCenter,
                   child: MaterialButton(
                       onPressed: ()=>widget.toggleView(),
                       child: Text(
-                        "Don't have an account? Sign Up",
+                        "Already have an account? Login",
                         style: GoogleFonts.montserrat(
                           color: Colors.white,
                           decoration: TextDecoration.underline,
