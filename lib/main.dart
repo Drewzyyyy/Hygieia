@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:hygieia/screens/home/home.dart';
+import 'package:hygieia/screens/settings/settings.dart';
 import 'package:hygieia/screens/wrapper.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:hygieia/services/auth.dart';
