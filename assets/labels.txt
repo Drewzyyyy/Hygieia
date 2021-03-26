@@ -1,0 +1,39 @@
+0 Trash/Disposable Boxes
+1 Trash/soiled plastic
+2 Trash/Cigarette butts
+3 Trash/Trash
+4 Trash/Broken pots and dishes
+5 Biodegradable/Leftover Food
+6 Biodegradable/Large Bones
+7 Biodegradable/Fruit Peels
+8 Biodegradable/Fruit Pulp
+9 Biodegradable/Tea Scraps
+10 Biodegradable/Leaf and Vegetable roots
+11 Biodegradable/Egg Shells
+12 Biodegradable/Fish Bones
+13 Hazardous/Rechargeables
+14 Recyclables/Bags
+15 Recyclables/Cosmetic Bottles
+16 Recyclables/Plastic Toys
+17 Recyclables/Plastic Bowls and Pots
+18 Recyclables/Plastic Hangers
+19 Recyclables/Paper Bags
+20 Hazardous/Wires
+21 Recyclables/Clothes
+22 Recyclables/Cans
+23 Recyclables/Pillows
+24 Recyclables/Plush toys
+25 Recyclables/Shampoo bottles
+26 Recyclables/Glasses
+27 Recyclables/Leather shoes
+28 Recyclables/Cutting Board
+29 Recyclables/Cardboard Boxes
+30 Recyclables/Spice Bottles
+31 Recyclables/Wine Bottles
+32 Recyclables/Metal Food Cans
+33 Recyclables/Pot
+34 Recyclables/Plastic Drums
+35 Recyclables/Beverage Bottles
+36 Hazardous/Batteries
+37 Hazardous/Ointment
+38 Recyclables/Paper

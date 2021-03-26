@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:hygieia/screens/home/home.dart';
-import 'package:hygieia/screens/settings/settings.dart';
 import 'package:hygieia/screens/wrapper.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:hygieia/services/auth.dart';
+import 'package:hygieia/screens/mainprofile.dart';
+import 'package:hygieia/screens/createevent.dart';
+import 'package:hygieia/screens/claimpoints.dart';
 import 'package:provider/provider.dart';
 import 'models/user.dart';
 
@@ -20,7 +21,14 @@ class Source extends StatelessWidget {
     return StreamProvider<AppUser>.value(
       value: AuthService().user,
       child: MaterialApp(
-        home: Wrapper(),
+        // home: Wrapper(),
+        initialRoute: '/dash',
+        routes: {
+          '/dash': (context) => Wrapper(),
+          '/MainProfile': (context) => MainProfile(),
+          '/ClaimPoints': (context) => ClaimPoints(),
+          '/CreateEvent': (context) => CreateEvent(),
+        },
       ),
     );
   }
