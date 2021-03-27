@@ -1,6 +1,6 @@
-#Hygieia  
+# Hygieia  
 
-*Screens:*  
+* Screens: *  
 1. Sign up/Login page - Starts when the user is currently not logged in, else continues to the dashboard immediately  
 
 2. Dashboard - Location for all the information about your waste management practices 
